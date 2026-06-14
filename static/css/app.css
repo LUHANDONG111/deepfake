@@ -1,0 +1,16 @@
+input[type="range"] {
+  accent-color: #22d3ee;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.drop-active {
+  border-color: #22d3ee;
+  background: rgba(8, 145, 178, 0.12);
+}
+
+.face-overlay {
+  pointer-events: none;
+}
