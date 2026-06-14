@@ -1,0 +1,6 @@
+Database migrations for the Flask API.
+
+Use these commands from the project root:
+
+flask --app app:create_app db migrate -m "describe change"
+flask --app app:create_app db upgrade

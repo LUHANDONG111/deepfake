@@ -1,0 +1,14 @@
+.superpowers/
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+backend/.venv/
+backend/instance/
+backend/static/uploads/
+backend/static/reports/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env.local
