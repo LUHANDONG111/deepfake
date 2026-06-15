@@ -10,7 +10,10 @@
       </div>
     </template>
     <el-table :data="tasks" v-loading="loading" class="comfortable-table history-table">
-      <el-table-column prop="id" :label="t('common.taskId')" min-width="360" show-overflow-tooltip />
+      <el-table-column prop="id" :label="t('common.taskId')" min-width="300" show-overflow-tooltip />
+      <el-table-column prop="original_filename" :label="t('common.originalVideo')" min-width="220" show-overflow-tooltip>
+        <template #default="{ row }">{{ row.original_filename || "-" }}</template>
+      </el-table-column>
       <el-table-column prop="status" :label="t('common.status')" width="116">
         <template #default="{ row }">
           <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
@@ -44,6 +47,7 @@
     <div v-if="detailTask" class="detail-drawer">
       <el-descriptions :column="1" border>
         <el-descriptions-item :label="t('common.taskId')">{{ detailTask.id }}</el-descriptions-item>
+        <el-descriptions-item :label="t('common.originalVideo')">{{ detailTask.original_filename || "-" }}</el-descriptions-item>
         <el-descriptions-item :label="t('common.status')">{{ detailTask.status }}</el-descriptions-item>
         <el-descriptions-item :label="t('common.progress')">{{ detailTask.progress }}%</el-descriptions-item>
         <el-descriptions-item :label="t('common.verdict')">{{ detailTask.final_verdict || "-" }}</el-descriptions-item>
@@ -153,7 +157,7 @@ async function saveRemark() {
 
 async function remove(row) {
   try {
-    await ElMessageBox.confirm(t("history.confirmDelete", { id: row.id }), t("history.confirmTitle"), { type: "warning" });
+    await ElMessageBox.confirm(t("history.confirmDelete", { name: row.original_filename || row.id }), t("history.confirmTitle"), { type: "warning" });
   } catch {
     return;
   }

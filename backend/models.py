@@ -25,6 +25,7 @@ class TaskSession(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True, index=True)
     video_path = db.Column(db.String(512), nullable=False)
+    original_filename = db.Column(db.String(255), nullable=True)
     report_path = db.Column(db.String(512), nullable=True)
     status = db.Column(db.String(20), nullable=False, default="PENDING")
     progress = db.Column(db.Integer, nullable=False, default=0)

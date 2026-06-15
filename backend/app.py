@@ -64,6 +64,9 @@ def run_sqlite_compat_migrations():
     if "remark" not in columns:
         db.session.execute(text("ALTER TABLE task_sessions ADD COLUMN remark VARCHAR(500)"))
         db.session.commit()
+    if "original_filename" not in columns:
+        db.session.execute(text("ALTER TABLE task_sessions ADD COLUMN original_filename VARCHAR(255)"))
+        db.session.commit()
 
 
 def assign_legacy_tasks_to_admin():

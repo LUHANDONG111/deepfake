@@ -33,7 +33,7 @@ def test_upload_creates_pending_task_without_starting_worker(client, app):
     response = client.post(
         "/api/upload",
         data={
-            "file": (io.BytesIO(b"fake mp4 bytes"), "sample.mp4"),
+            "file": (io.BytesIO(b"fake mp4 bytes"), "sample video.mp4"),
             "threshold": "0.6",
             "window_size": "7",
             "skip_rate": "3",
@@ -54,6 +54,7 @@ def test_upload_creates_pending_task_without_starting_worker(client, app):
         assert task.threshold == 0.6
         assert task.window_size == 7
         assert task.skip_rate == 3
+        assert task.original_filename == "sample_video.mp4"
         assert os.path.exists(task.video_path)
 
 
@@ -265,3 +266,26 @@ def test_result_keeps_core_payload_compatible(client, app):
         "video_url": "/static/uploads/task-5.mp4",
         "report_url": "/static/reports/task-5.csv",
     }
+
+
+def test_task_payloads_include_original_filename(client, app):
+    with app.app_context():
+        user = create_user()
+        task = TaskSession(
+            id="task-6",
+            user_id=user.id,
+            video_path=os.path.join(app.config["UPLOAD_FOLDER"], "task-6.mp4"),
+            status="FAILED",
+            original_filename="interview.mp4",
+        )
+        db.session.add(task)
+        db.session.commit()
+    headers = auth_header(client)
+
+    list_response = client.get("/api/tasks", headers=headers)
+    detail_response = client.get("/api/tasks/task-6", headers=headers)
+
+    assert list_response.status_code == 200
+    assert list_response.get_json()["items"][0]["original_filename"] == "interview.mp4"
+    assert detail_response.status_code == 200
+    assert detail_response.get_json()["task"]["original_filename"] == "interview.mp4"
